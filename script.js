@@ -175,7 +175,7 @@ checkout.addEventListener("click", () => {
 function checkRestaurantOpen() {
     const data = new Date()
     const hora = data.getHours()
-    return hora >= 8 && hora < 18
+    return hora >= 8 && hora < 22
 }
 
 const spanItem = document.getElementById('date-span')
