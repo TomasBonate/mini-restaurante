@@ -8,6 +8,7 @@ const closeModalBtn = document.getElementById('close-modal-btn')
 const cartCounter = document.getElementById('cart-count')
 const addressInput = document.getElementById('address')
 const addressWarn = document.getElementById('address-warn')
+const cartWarn = document.getElementById('cart-warn')
 
 let cart = []
 
@@ -51,12 +52,14 @@ function addToCart(name, price) {
             price,
             quantity: 1,
         })
+        cartWarn.classList.add("hidden")
     }
 
     updateCartModal()
 }
 
 //update cart modal
+let currentCartotal = 0;
 function updateCartModal() {
     cartItemsContainer.innerHTML = "";
     let total = 0;
@@ -90,6 +93,7 @@ function updateCartModal() {
     })
 
     cartCounter.innerHTML = cart.length;
+    currentCartotal = total
 }
 
 // remove item
@@ -147,7 +151,10 @@ checkout.addEventListener("click", () => {
         return
     }
 
-    if (cart.length === 0) return;
+    if (cart.length === 0) {
+        cartWarn.classList.remove("hidden")
+        return
+    }
     if (addressInput.value === "") {
         addressWarn.classList.remove("hidden")
         addressInput.classList.add("border-red-500")
@@ -159,15 +166,19 @@ checkout.addEventListener("click", () => {
 
     const cartItem = cart.map((item) => {
         return (
-            `${item.name} Quantidade: (${item.quantity}) Preço: ${item.price} MTn |`
+             `${item.name}\nQuantidade: ${item.quantity}\nPreço: ${item.price} MTn\n`
         )
-    }).join("")
+    }).join("\n")
 
-    const message = encodeURIComponent(cartItem)
+
+    const total = `${currentCartotal}MTn`
+    const address = addressInput.value
+    const message = encodeURIComponent(`${cartItem}\n Total a pagar: ${total}\n Endereço: ${address}`)
     const phone = "847283376"
-    window.open(`https://wa.me/${phone}?text=${message} Endereço: ${addressInput.value}`)
+    window.open(`https://wa.me/${phone}?text=${message}`)
 
-    caart = []
+    cart = []
+    cartModal.style.display = "none"
     updateCartModal()
 })
 
